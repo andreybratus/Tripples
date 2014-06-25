@@ -1,0 +1,23 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /                         controllers.Application.index()
+# Keywords page
+GET     /keyword                  controllers.Keyword.keywords()
+# Topic page
+GET     /topic                     controllers.Topic.topic()
+# Direct
+GET     /direct                     controllers.Direct.direct()
+# Visualize
+GET		/visualize/:id				controllers.Application.visualize(id: String)
+
+POST  	/keyword  				    controllers.Keyword.keywordSubmit()
+POST  	/topic						controllers.Topic.getTopic()
+POST    /ytopic				   		controllers.Topic.getVideoTopic()
+POST	/direct						controllers.Direct.directSearch()
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.at(path="/public", file)
+GET     /flare/:id                  controllers.Application.sayHello(id: String)
+GET		/aripple					controllers.Application.aripple()

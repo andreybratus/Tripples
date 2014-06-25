@@ -1,0 +1,301 @@
+@(data:VideoInfo)
+@import models.VideoInfo
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+<title>Tripples visualization</title>
+
+    <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/bootstrap.min.css")">
+	<link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/cover1.css")">
+	<link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/bootstrap.css")">
+	<link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/faviconr3.ico")">
+
+ <script src="@routes.Assets.at("javascripts/jquery-1.7.1.min.js")"></script>
+ <script src="@routes.Assets.at("javascripts/domvas.js")"></script>
+  
+<style>
+
+.node {
+  stroke: #009900;
+  stroke-width: 1.5px;
+  color: #009900;
+ pointer-events: all;
+}
+ 
+ 
+.node text {
+  pointer-events: none;
+  font: 8px Super Sans;
+  stroke-width: 0px;
+}
+ 
+.link {
+  stroke: #999;
+ */ stroke-opacity: 1; */
+}
+ 
+ 
+ 
+path.link {
+  fill: none;
+  stroke-width: 0.3px;
+}
+ 
+ 
+marker#end {
+  fill: #999;
+ 
+}
+ 
+line {
+  stroke: #000;
+  stroke-width: 0.5px;
+}
+
+
+
+</style>
+		
+</head>
+
+<body>
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+               <a class="navbar-brand" href="#">Admire tripples of video @data.name</a>
+        </div>
+        </div>
+        </div>
+
+<div class="span3 affix" data-spy="affix" data-offset-top="200">
+          <div class="sidebar-nav">
+            <div class="well"> 
+              <ul class="nav nav-list">
+                <li class="nav-header1">Info box</li>
+                <li>Video ID: @data.id</li>
+                <li>Number of shares: @data.numberOfShares</li>
+                <li>First time reshared: @data.firstShared</li>
+                <li>Date of publication: @data.datePublished</li>
+                <li>Views on YouTube: @data.viewCount</li>
+              </ul>
+            </div><!--/.well -->
+          </div>
+        </div><!--/span-->
+
+<script src="@routes.Assets.at("javascripts/d3.v3.min.js")"></script>
+
+<script>
+
+var w = $(document).width();
+var h = $(document).height();
+
+var  maxNodeSize = 50,
+    root;
+    
+ color = d3.scale.category20c();
+
+var vis;
+
+var force = d3.layout.force(); 
+
+vis = d3.select("body").append("svg:svg")
+		.attr("width", w - 10)
+	    .attr("height", h - 10)
+	    .attr("pointer-events", "all")
+	    .append('svg:g')
+        .call(d3.behavior.zoom().on("zoom", redraw))
+        .append('svg:g');
+        
+    vis.append('svg:rect')
+    .attr('width', w)
+    .attr('height', h)
+    .attr('fill', 'white') 
+    .attr('fill-opacity','0');
+    
+    
+    function redraw() {
+  vis.attr("transform",
+      "translate(" + d3.event.translate + ")"
+      + " scale(" + d3.event.scale + ")");
+}
+ 
+d3.json("/flare/@data.id", function(json) {
+ 
+	root = json;
+	root.fixed = true;
+	root.x = w / 2;
+	root.y = h/2;
+ 
+ 
+        // Build the arrow
+	var defs = vis.insert("svg:defs").selectAll("marker")
+	    .data(["end"]);
+ 
+ 
+	defs.enter().append("svg:marker")
+	    .attr("id", "end")               // As explained here: http://www.d3noob.org/2013/03/d3js-force-directed-graph-example-basic.html
+	    .attr("viewBox", "0 -5 10 10")
+	    .attr("refX", 10)
+	    .attr("refY", 0)
+	    .attr("markerWidth", 3)
+	    .attr("markerHeight", 3)
+	    .attr("orient", "auto")
+	    .append("svg:path")
+	    .attr("d", "M0,-5L10,0L0,5");
+ 
+	   update();
+});
+ 
+ 
+/**
+ *   
+ */
+function update() {
+  var nodes = flatten(root),
+      links = d3.layout.tree().links(nodes);
+
+  // Restart the force layout.
+  force.nodes(nodes)
+      	.links(links)
+      	.gravity(0.3)
+		.charge(-1000)
+		.linkDistance(7)
+		.friction(0.5)
+		.linkStrength(function(l, i) {return 1; })
+		.size([w, h])
+		.on("tick", tick)
+      	.start();
+ 
+   var path = vis.selectAll("path.link")
+	    .data(links, function(d) { return d.target.id; });
+ 
+	  path.enter().insert("svg:path")
+	    .attr("class", "link")
+	    .attr("marker-end", "url(#end)")
+	    .style("stroke", "#333333");
+ 
+ 
+  // Exit any old paths.
+  path.exit().remove();
+ 
+ 
+ 
+  // Update the nodes…
+  var node = vis.selectAll("g.node")
+      .data(nodes, function(d) { return d.id; });
+ 	  
+  // Enter any new nodes.
+  var nodeEnter = node.enter().append("svg:g")
+      .attr("class", "node")
+      .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
+      .on("click", click)
+      .call(force.drag);
+ 
+  // Append a circle
+  nodeEnter.append("svg:circle")
+      .attr("r", function(d) { return d.size; })
+      .style("fill", function(d) {return color(d.size);});
+ 
+ 
+  //Uncomment this in case you want to have text in your nodes
+  // Add text to the node (as defined by the json file) 
+  nodeEnter.append("svg:text")
+      .attr("text-anchor", "middle")
+      .attr("dy", ".35em")
+      .style("font-size",function(d) {  return (d.size > 12) ? d.size*0.9 : d.size*1.5  ;  })
+      .text(function(d) { return d.name; });
+  
+  
+  //Add an image to the node (if any)
+  nodeEnter.append("svg:image")
+	      .attr("xlink:href",  function(d) { return d.logo;})
+	      .attr("x", function(d) { return (-17);})
+	      .attr("y", function(d) { return (-12);})
+	      .attr("height", function(d) { return d.logoheight;})
+	      .attr("width", function(d) { return d.logowidth;});
+	      
+ 
+ 
+ 
+  // Exit any old nodes.
+  node.exit().remove();
+ 
+ 
+  // Re-select for update.
+  path = vis.selectAll("path.link");
+  node = vis.selectAll("g.node");
+ 
+function tick() {
+    path.attr("d", function(d) {
+     
+		 var dx = d.target.x - d.source.x,
+	         dy = d.target.y - d.source.y,
+	         dr = Math.sqrt(dx * dx + dy * dy);
+	         return 	"M" + d.source.x + "," 
+	    			+ d.source.y 
+	    			+ "A" + dr + "," 
+	    			+ dr + " 0 0,1 " 
+	    			+ d.target.x + "," 
+	    			+ d.target.y;
+	});
+  node.attr("transform", nodeTransform);    
+  }
+}
+ 
+ 
+ 
+ 
+/*
+ * Gives the coordinates of the border for keeping the nodes inside a frame
+ * http://bl.ocks.org/mbostock/1129492
+ */ 
+function nodeTransform(d) {
+	// d.x =  Math.max(maxNodeSize, Math.min(w - (d.logowidth/2 || 16), d.x));
+//     d.y =  Math.max(maxNodeSize, Math.min(h - (d.logoheight/2 || 16), d.y));
+    return "translate(" + d.x + "," + d.y + ")";
+   }
+ 
+/**
+ * Color leaf nodes orange, and packages white or blue.
+ */ 
+function color(d) {
+  return d._children ? "#3182bd" : d.children ? "#c6dbef" : "#fd8d3c";
+}
+ 
+/**
+ * Toggle children on click.
+ */ 
+function click(d) {
+  if (d.children) {
+    d._children = d.children;
+    d.children = null;
+  } else {
+    d.children = d._children;
+    d._children = null;
+  }
+ 
+  update();
+}
+ 
+ 
+/**
+ * Returns a list of all nodes under the root.
+ */ 
+function flatten(root) {
+  var nodes = []; 
+  var i = 0;
+ 
+  function recurse(node) {
+    if (node.children) 
+    	node.children.forEach(recurse);
+    if (!node.id) 
+    	node.id = ++i;
+    nodes.push(node);
+  }
+ 
+  recurse(root);
+  return nodes;
+}	
+	
+	
+</script>

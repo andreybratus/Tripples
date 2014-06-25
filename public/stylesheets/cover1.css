@@ -1,0 +1,182 @@
+body {
+  height: 100%;
+  background-color: #1000;
+}
+body {
+  color: #blue;
+  text-align: center;
+  text-shadow: 0 1px 3px rgba(0,0,0,.5);
+   padding-top: 5px;
+  padding-bottom: 40px;
+   background:url('../images/bubbles.jpg') no-repeat center top;
+  width: 100%;
+  height: 350px; 
+  top:0;
+  left:0;
+  z-index: -1;
+ }
+	 
+.form-search {
+  max-width: 500px;
+  padding: 10px;
+  margin: 85px auto auto;
+}
+.form-searching {
+  max-width: 550px;
+  padding: 52px;
+  margin: auto;
+  margin-top: 25px;
+}
+.form-searching1 {
+  margin: auto auto;
+  max-width: 770px;
+  padding: 10px;
+  }
+  .form-searching2 {
+  max-width: 821px;
+  padding: 10px;
+  margin: 120px auto;
+}
+.form-search-heading {
+float:left;
+margin: 10px 0;
+line-height: 40px;
+}
+.form-searching-heading {
+float:left;
+margin: 10px 0;
+line-height: 40px;
+}
+
+.form-searching1-heading {
+float:left;
+margin: 10px 0;
+line-height: 40px;
+}
+.form-searching2-heading {
+float:left;
+margin: 10px 0;
+line-height: 40px;
+}
+.videolist .table-heading {
+margin: 10px 0;
+}
+.form-search .form-group {
+float:left;
+margin: 10px;
+}
+
+.form-searching .form-group {
+float:left;
+margin: 10px;
+}
+.form-searching1 .form-group {
+float:left;
+margin: 10px;
+}
+.form-searching2 .form-group {
+float:left;
+margin: 10px;
+}
+.form-search .form-control {
+  position: relative;
+  height: auto;
+  padding: 10px;
+  max-width: 350px;
+  font-size: 16px;
+}
+.form-searching2 .form-control {
+  position: relative;
+  height: auto;
+  padding: 10px;
+  max-width: 350px;
+  font-size: 16px;
+}
+.form-search .btn-lg{
+float:left;
+margin: 10px 0;
+}
+.form-searching .btn{
+float:left;
+margin: 10px 0;
+}
+.form-searching1 .btn{
+float:left;
+margin: 10px 0;
+}
+.form-searching2 .btn-lg{
+float:left;
+margin: 10px 0;
+}
+
+.form-search .form-control:focus {
+  z-index: 2;
+}
+.form-search input[type="text"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.videolist {
+padding: 60px 185px 15px;
+}
+
+.videolist2 {
+max-width: 950px;
+padding: 5px;
+ margin: 41px auto;
+}
+.table2-heading{
+margin: 10px 0;
+}
+.videolist2 .table-striped{
+margin: auto;
+width: 850px;
+}
+.videolist1 {
+  max-width: 430px;
+  padding: 5px;
+  margin: auto;
+}
+.table1-heading{
+margin: 10px 0;
+}
+.videolist1 .table-striped{
+float:left;
+margin: 10px 0;
+}
+
+.table>thead>tr>th{
+text-align:center;
+}
+
+.form-control-wide{
+width:400px;
+}
+.videotable-container{
+	max-height: 400px;
+	overflow: auto;
+}
+.videotable-container1{
+	max-height: 150px;
+	overflow: auto;
+}
+.videotable-container2{
+	max-height: 300px;
+	overflow: auto;
+}
+.numberresults{
+text-align:center;
+margin-left:-20px;
+margin-top:10px;
+}
+.numberresults1{
+text-align:center;
+margin-left:-790px;
+margin-top:25px;
+margin-bottom:25px;
+}
+/* Padding for spacing */
+.inner {
+  padding: 50px;
+}
